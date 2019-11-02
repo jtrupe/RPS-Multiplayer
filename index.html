@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rock Paper Scissors Online Multiplayer</title>
+    
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-database.js"></script>
+</head>
+
+<body>
+
+    <div>
+        <p id="directions-text">Press r, p or s to start playing!</p>
+        <label id = "P1label" for= "player1input">P1 Name:</label>
+        <input type="text" id ="player1input">
+        <input id="addP1" type="submit" value="Add">
+        <label id = "P2label" for= "player2input">P2 Name:</label>
+        <input type="text" id ="player2input">
+        <input id="addP2" type="submit" value="Add">
+        <p id="player1-text"></p>
+        <p id="player2-text"></p>
+        <p id="P1wins-text"></p>
+        <p id="P2wins-text"></p>
+        <p id="ties-text"></p>
+    </div>
+    <script src="assets/javascript/app.js"></script>
+</body>
+
+</html>
