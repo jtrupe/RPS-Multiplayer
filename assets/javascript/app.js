@@ -15,6 +15,8 @@ var database = firebase.database();
 // Creating variables to hold the number of wins, losses, and ties. They start at 0.
 var P1wins = 0;
 var P2wins = 0;
+var P1guess = "";
+var P2guess = "";
 var ties = 0;
 var P1name = "";
 var P2name = "";
@@ -22,9 +24,7 @@ var P1turnTaken = false;
 var P2turnTaken = false;
 var gameStart = false;
 
-if ((P1name != "") && (P2name != "")) {
-    gameStart = true;
-}
+
 
 // Create variables that hold references to the places in the HTML where we want to display things.
 var directionsText = document.getElementById("directions-text");
@@ -40,8 +40,13 @@ $(document).on("click", "#addP1", function () {
     $("#player1input").remove();
     $("#addP1").remove();
     $("#P1label").remove();
-    console.log(P1name);
-})
+    if ((P1name != "") && (P2name != "")) {
+        gameStart = true;
+    }
+    database.ref().push({
+        Player1: P1name 
+    })
+});
 
 $(document).on("click", "#addP2", function () {
     event.preventDefault();
@@ -49,43 +54,58 @@ $(document).on("click", "#addP2", function () {
     $("#player2input").remove();
     $("#addP2").remove();
     $("#P2label").remove();
-})
+    if ((P1name != "") && (P2name != "")) {
+        gameStart = true;
+    }
+    database.ref().push({
+        Player2: P2name 
+    })
+});
 
 // This function is run whenever the user presses a key.
 document.onkeyup = function (event) {
-    console.log(gameStart);
     if (gameStart) {
         if (!P1turnTaken) {
-            var P1guess = event.key;
+            P1guess = event.key;
             P1turnTaken = true;
+            database.ref().push({
+                P1guess : P1guess 
+            })
         }
-        else if (!P2turnTaken)
-            var P2guess = event.key;
-            P2turnTaken = true ;
+        else if (!P2turnTaken) {
+            P2guess = event.key;
+            P2turnTaken = true;
+            database.ref().push({
+                P2guess : P2guess 
+            })
+        }
+    }
+    console.log(P1guess);
+    console.log(P2guess);
+
+    if (gameStart && P1turnTaken && P2turnTaken) {
+    
+            if ((P1guess === "r" && P2guess === "s") ||
+                (P1guess === "s" && P2guess === "p") ||
+                (P1guess === "p" && P2guess === "r")) {
+                P1wins++;
+            } else if (P1guess === P2guess) {
+                ties++;
+            } else {
+                P2wins++;
+            }
+    
+            // Hide the directions
+            directionsText.textContent = "";
+    
+            // Display the user and computer guesses, and wins/losses/ties.
+            P1ChoiceText.textContent = "P1 chose: " + P1guess;
+            P2ChoiceText.textContent = "P2 chose: " + P2guess;
+            P1winsText.textContent = "wins: " + P1wins;
+            P2winsText.textContent = "losses: " + P2wins;
+            tiesText.textContent = "ties: " + ties;
+            
+            P1turnTaken= false ;
+            P2turnTaken= false ; 
     }
 }
-if (gameStart && P1turnTaken && P2turnTaken) { 
-    if ((P1guess === "r") || (P1guess === "p") || (P1guess === "s")) {
-
-        if ((P1guess === "r" && P2guess === "s") ||
-            (P1guess === "s" && P2guess === "p") ||
-            (P1guess === "p" && P2guess === "r")) {
-            P1wins++;
-        } else if (P1guess === P2guess) {
-            ties++;
-        } else {
-            P2wins++;
-        }
-
-        // Hide the directions
-        directionsText.textContent = "";
-
-        // Display the user and computer guesses, and wins/losses/ties.
-        P1ChoiceText.textContent = "P1 chose: " + P1guess;
-        P2ChoiceText.textContent = "P2 chose: " + P2guess;
-        P1winsText.textContent = "wins: " + P1wins;
-        P2winsText.textContent = "losses: " + P2wins;
-        tiesText.textContent = "ties: " + ties;
-    }
-
-};
